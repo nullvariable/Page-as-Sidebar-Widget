@@ -151,6 +151,22 @@ function dpr($value) {
  * it is indeed page/post 1 that is the intended parent. Otherwise we update the
  * stored value accordingly.
  */
-function fix_old_pasw($parentid, $subpageid) {
-    
+function fix_old_pasw() {
+  $pages = get_pages(array('meta_key'=>'pasw_widget_page_id'));
+  print "<pre>";
+  foreach ($pages as $page) {
+    //update the subpage with this pages id so we have a backwards reference
+    $sidebarid = $page->meta_value;
+    $parentid = $page->ID;
+    $old = get_post_meta($sidebarid, 'pasw_is_subpage');
+    update_post_meta($sidebarid, 'pasw_is_subpage', $parentid);
+    print __("updated sidebar parent from ". $old[0] ." to ". $parentid ."\n");
+  }
 }
+//register_activation_hook(__FILE__, 'fix_old_pasw');
+add_action('admin_menu', 'pasw_menu');
+function pasw_menu() {
+  add_options_page('Fix PASW','Fix PASW', 'manage_options', 'pasw-slug', 'fix_old_pasw');
+}
+
+
