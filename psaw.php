@@ -170,8 +170,8 @@ function fix_old_pasw() {
 }
 //register_activation_hook(__FILE__, 'fix_old_pasw');
 //add_action('admin_menu', 'pasw_menu');
+
 function pasw_menu() {
   add_options_page('Fix PASW','Fix PASW', 'manage_options', 'pasw-slug', 'fix_old_pasw');
 }
-
 
